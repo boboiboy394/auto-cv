@@ -3,7 +3,7 @@
 ## Phase 1: Foundation & Landing
 
 ### Task 1.1: Tech Setup (`tech-setup`)
-**Status:** 📋 Planned
+**Status:** 🔄 In Progress
 
 **Requirements:**
 - Initialize Next.js project với App Router + TypeScript
