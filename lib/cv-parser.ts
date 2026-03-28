@@ -1,4 +1,3 @@
-import pdfParse from "pdf-parse";
 import mammoth from "mammoth";
 import type { ParsedCVData } from "@/lib/types";
 
@@ -16,13 +15,24 @@ export interface ParseResult {
   warnings: string[];
 }
 
+/** Lazy-loaded pdf-parse so it only loads when called (not at module import time). */
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+type PdfParseFn = (buf: Buffer) => Promise<{ text: string; metadata?: { numberOfPages?: number } }>;
+let _pdfParse: PdfParseFn | null = null;
+function getPdfParse(): PdfParseFn {
+  if (!_pdfParse) {
+    // pdf-parse v2 ESM has no default export — use CJS entry
+    _pdfParse = require("pdf-parse") as PdfParseFn;
+  }
+  return _pdfParse;
+}
+
 /**
  * Extract text from a PDF buffer using pdf-parse.
  */
 export async function extractTextFromPDF(buffer: Buffer): Promise<TextExtractionResult> {
   const warnings: string[] = [];
-
-  const data = await pdfParse(buffer);
+  const data = await getPdfParse()(buffer);
   const text = data.text?.trim() ?? "";
 
   // Check for low text extraction (potential scanned/image PDF)

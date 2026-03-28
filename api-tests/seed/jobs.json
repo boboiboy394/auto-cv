@@ -1,0 +1,10 @@
+{
+  "validJob": {
+    "jdText": "We are looking for a Senior Frontend Engineer with 5+ years React experience, TypeScript proficiency, and experience with modern CSS. Familiarity with Next.js is a plus.",
+    "status": "jd_analyzed"
+  },
+  "minimalJob": {
+    "jdText": "Frontend Developer - React, TypeScript",
+    "status": "jd_analyzed"
+  }
+}

@@ -86,8 +86,8 @@ export async function POST(req: Request) {
 
   // --- Insert DB record ---
   const supabase = createSupabaseAdmin();
-  const { data: cvRecord, error: dbError } = await supabase
-    .from("cvs")
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: cvRecord, error: dbError } = await (supabase.from("cvs") as any)
     .insert({
       user_id: userId,
       original_name: fileName,
@@ -96,7 +96,7 @@ export async function POST(req: Request) {
       structured_data: parseResult.structuredData ?? null,
       parse_confidence: parseResult.confidence ?? null,
       warnings: parseResult.warnings,
-    } as Record<string, unknown>)
+    })
     .select()
     .single();
 

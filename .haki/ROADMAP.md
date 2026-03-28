@@ -3,7 +3,7 @@
 ## Phase 1: Foundation & Landing
 
 ### Task 1.1: Tech Setup (`tech-setup`)
-**Status:** 🔄 In Progress
+**Status:** ✅ Completed (2026-03-27)
 
 **Requirements:**
 - Initialize Next.js project với App Router + TypeScript
@@ -21,7 +21,7 @@
 ---
 
 ### Task 1.2: Landing Page (`landing-page`)
-**Status:** 📋 Planned
+**Status:** ✅ Completed (2026-03-27)
 
 **Requirements:**
 - Hero section: headline + subheadline về giá trị (free + fast)
@@ -40,7 +40,7 @@
 ---
 
 ### Task 1.3: Core Data Models (`data-models`)
-**Status:** ⏳ Pending | **Priority:** 1 | **Dependencies:** Task 1.1
+**Status:** ✅ Completed (2026-03-28)
 
 **Requirements:**
 - User model (Clerk user → profile)

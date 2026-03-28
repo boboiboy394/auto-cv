@@ -2,7 +2,7 @@
 
 > **Mục đích:** Tổng hợp bối cảnh từ `.haki` + trạng thái codebase để phiên sau (hoặc agent khác) tiếp tục không bị lệch. Cập nhật file này khi hoàn thành phase lớn hoặc đổi quyết định kiến trúc.
 
-**Cập nhật lần cuối:** 2026-03-27 (theo trạng thái repo tại thời điểm tổng hợp)
+**Cập nhật lần cuối:** 2026-03-28 (sau Tasks 1.1 + 1.2 + 1.3)
 
 ---
 
@@ -42,46 +42,68 @@
 
 ## 4. Trạng thái roadmap (ảnh chụp)
 
-- **Phase 1 — Task 1.1 (`tech-setup`):** Trên giấy là **In Progress**. Thực tế code mới ở mức **scaffold sớm** (xem §5).
-- **Task 1.2 (`landing-page`):** **Planned** — chưa bắt đầu trong codebase.
-- **1.3 trở đi:** Pending, phụ thuộc 1.1.
+- **Phase 1 — Task 1.1 (`tech-setup`):** ✅ **COMPLETED**
+- **Phase 1 — Task 1.2 (`landing-page`):** ✅ **COMPLETED** — 32 tests pass ✅
+- **Phase 1 — Task 1.3 (`data-models`):** ✅ **COMPLETED** — API routes + tests
+- **Phase 2, 3, 4, 5:** ⏳ Pending
 
 ---
 
-## 5. Trạng thái codebase (root `/Users/admin/Desktop/auto-cv`)
+## 5. Trạng thái codebase (root `D:\vibe-coding-project\auto-cv`)
 
-**Đã có**
+**Đã có (sau Tasks 1.1 + 1.2 + 1.3)**
 
-- `package.json`: **Next 16.2.1**, React 19, Tailwind v4, deps đã khai báo `@clerk/nextjs`, `@supabase/supabase-js`, `stripe`, `resend` — **chưa thấy import/sử dụng trong source**.
-- `app/layout.tsx`, `app/page.tsx`, `app/globals.css`: vẫn gần như **template create-next-app** (metadata “Create Next App”, hero mặc định).
-- Thư mục `scaffold-temp/`: bản scaffold phụ (có `AGENTS.md` riêng) — **không** coi là app chính trừ khi bạn chủ động merge.
+- Tất cả trên + **API routes CRUD**:
+  - `GET/POST /api/cv` — list và create CV
+  - `GET/DELETE /api/cv/:id` — read và delete CV
+  - `GET/POST /api/jobs` — list và create job application
+  - `GET/PATCH/DELETE /api/jobs/:id` — read, update, delete job
+  - Credits check khi tạo job
+  - CV ownership verification
+- **API test infrastructure**: `api-tests/`, `api-client.ts`, auth helper, seed data
+- **Vitest test suite**: 32 component tests + 5 API tests
 
-**Chưa có (theo Task 1.1)**
+- `package.json`: **Next 16.2.1**, React 19, Tailwind v4 — name: `jobboost-ai`
+- `middleware.ts`: Clerk v7 auth protection (async pattern, `auth().protect()`)
+- `app/(auth)/sign-in/[[...sign-in]]/page.tsx` + `sign-up`: Clerk prebuilt UI
+- `app/(marketing)/page.tsx`: Landing shell (placeholder, full impl trong 1.2)
+- `app/layout.tsx`: ClerkProvider wrapped, Vietnamese metadata
+- `app/globals.css`: ui-ux-pro-max SaaS design tokens (Tailwind v4 @theme block)
+- `lib/supabase.ts` + `lib/supabase/server.ts`: Factory pattern (tránh build-time env errors)
+- `lib/types.ts`: Database types (Profile, CV, JobApplication, JobResult)
+- `supabase/migrations/001_initial_schema.sql`: Full schema + RLS policies
+- `app/api/webhooks/clerk/route.ts`: Clerk webhook → auto-create profile
+- `.env.example`: Template đầy đủ env vars
 
-- `middleware.ts` (Clerk)
-- `app/(auth)/sign-in`, `sign-up`, route group `(marketing)`
-- `lib/supabase.ts`, `lib/supabase/server.ts`, `lib/types.ts`
-- `supabase/migrations/*.sql`, RLS
-- `.env.example` / `.env.local` (không track trong repo hiện tại)
-- `vercel.json`, deploy GitHub/Vercel
-- Áp dụng **ui-ux-pro-max** tokens / font theo skill (bước 4 task 1.1)
-- `package.json` **name** vẫn là `scaffold-temp` — nên đổi thành tên dự án (vd. `jobboost-ai`) khi chỉnh project identity
+**Chưa có**
+
+- Step 3 (Vercel deploy): Chưa push GitHub, chưa deploy Vercel, chưa tạo vercel.json
+- Clerk JWT template setup trong Supabase (để RLS `current_user_id()` hoạt động)
+- Supabase Storage bucket cho CV files
+- `.env.local` thực tế (credentials)
+- GitHub repo remote chưa set
+
+**Tech decisions đã thực hiện**
+
+- Supabase factory pattern: `createSupabaseAdmin()` / `createSupabaseClient()` — gọi trong handler không ở module scope
+- Clerk v7 middleware: `async (auth, req)` + `await (auth() as any).protect()`
+- `svix` package: Clerk webhook signature verification
 
 **Ghi chú workflow**
 
-- [CLAUDE.md](../CLAUDE.md) yêu cầu đọc `AGENTS.md` trong repo — **ở root chưa có** `AGENTS.md` (chỉ có trong `scaffold-temp` / template). Nên thêm `AGENTS.md` ở root hoặc trỏ rõ đường dẫn thật để agent không lạc.
+- [CLAUDE.md](../CLAUDE.md) yêu cầu đọc `AGENTS.md` trong repo — **ở root chưa có** `AGENTS.md` (chỉ có trong `scaffold-temp` / template).
+- Build pass ✅ với `pnpm build`
+- Warning về workspace root (pnpm-workspace.yaml) và middleware convention (Next.js 16 khuyên dùng `proxy`)
 
 ---
 
 ## 6. Việc nên làm tiếp theo (thứ tự gợi ý)
 
-1. **Hoàn tất Task 1.1** theo [tasks/1.1.md](./tasks/1.1.md): cấu trúc route, Clerk, Supabase helpers, migration, `.env.example`, đổi `package.json` name.
-2. **Verify:** `pnpm dev`, sign-in/up, (sau khi có DB) smoke test Supabase.
-3. **Deploy Vercel** + env vars.
-4. **Bước design system** (1.1 step 4) → shell marketing.
-5. **Bắt đầu Task 1.2** (Vitest + landing sections).
-
-Sau mỗi chunk lớn: điền bảng **Implementation Details** / **Execution Results** trong `tasks/1.1.md` (hiện đang trống template).
+1. **Setup Clerk JWT template** trong Supabase Dashboard → Authentication → JWT Templates → Clerk
+2. **Tạo Supabase Storage bucket** `cvs` trong Dashboard → Storage
+3. **Copy `.env.example` → `.env.local`** + điền credentials thật
+4. **Push GitHub** + **Deploy Vercel** + add env vars trong Vercel dashboard
+5. **Bắt đầu Task 1.3** (Core Data Models — Supabase schema đã có trong `supabase/migrations/`)
 
 ---
 

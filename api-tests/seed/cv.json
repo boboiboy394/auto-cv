@@ -1,0 +1,11 @@
+{
+  "validCV": {
+    "originalName": "Nguyen Van A - Senior Frontend.pdf",
+    "mimeType": "application/pdf",
+    "sizeBytes": 245000
+  },
+  "invalidCV": {
+    "mimeType": "image/png",
+    "sizeBytes": 1000000
+  }
+}
