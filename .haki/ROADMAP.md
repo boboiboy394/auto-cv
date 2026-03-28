@@ -57,7 +57,7 @@
 ## Phase 2: CV Pipeline
 
 ### Task 2.1: CV Upload & Parse (`cv-upload-parse`)
-**Status:** ⏳ Pending | **Priority:** 1 | **Dependencies:** Task 1.3
+**Status:** ✅ Completed (2026-03-28) | **Priority:** 1 | **Dependencies:** Task 1.3
 
 **Requirements:**
 - Upload CV (PDF/Word) lên S3 hoặc local storage

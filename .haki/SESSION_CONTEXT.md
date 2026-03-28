@@ -2,7 +2,7 @@
 
 > **Mục đích:** Tổng hợp bối cảnh từ `.haki` + trạng thái codebase để phiên sau (hoặc agent khác) tiếp tục không bị lệch. Cập nhật file này khi hoàn thành phase lớn hoặc đổi quyết định kiến trúc.
 
-**Cập nhật lần cuối:** 2026-03-28 (sau Tasks 1.1 + 1.2 + 1.3)
+**Cập nhật lần cuối:** 2026-03-28 (sau Tasks 1.1 + 1.2 + 1.3 + **2.1**)
 
 ---
 
@@ -45,7 +45,8 @@
 - **Phase 1 — Task 1.1 (`tech-setup`):** ✅ **COMPLETED**
 - **Phase 1 — Task 1.2 (`landing-page`):** ✅ **COMPLETED** — 32 tests pass ✅
 - **Phase 1 — Task 1.3 (`data-models`):** ✅ **COMPLETED** — API routes + tests
-- **Phase 2, 3, 4, 5:** ⏳ Pending
+- **Phase 2 — Task 2.1 (`cv-upload-parse`):** ✅ **COMPLETED** — 68 total tests pass ✅
+- **Phase 2 — Tasks 2.2, 3, 4, 5:** ⏳ Pending
 
 ---
 
@@ -79,7 +80,7 @@
 
 - Step 3 (Vercel deploy): Chưa push GitHub, chưa deploy Vercel, chưa tạo vercel.json
 - Clerk JWT template setup trong Supabase (để RLS `current_user_id()` hoạt động)
-- Supabase Storage bucket cho CV files
+- Supabase Storage bucket cho CV files (tạo bằng tay trong Dashboard)
 - `.env.local` thực tế (credentials)
 - GitHub repo remote chưa set
 
@@ -88,6 +89,10 @@
 - Supabase factory pattern: `createSupabaseAdmin()` / `createSupabaseClient()` — gọi trong handler không ở module scope
 - Clerk v7 middleware: `async (auth, req)` + `await (auth() as any).protect()`
 - `svix` package: Clerk webhook signature verification
+- **`lib/auth.ts`**: `getServerUserId()` helper — consistent auth cho tất cả API routes
+- **`pdf-parse`**: lazy-load pattern với `require()` — tránh jsdom + ESM conflicts
+- **`mammoth`**: dynamic import cho DOCX parsing
+- **Claude 3.5 Sonnet**: AI structured CV extraction với 30s timeout + confidence scoring
 
 **Ghi chú workflow**
 
